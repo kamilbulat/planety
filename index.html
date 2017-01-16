@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>klocki</title>
+    <meta charset="utf-8" />
+    <script src="three.js"></script>
+    <script>
+        window.addEventListener("load", function () {
+            //alert("ok")
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera(
+                45, // kąt patrzenia kamery (FOV - field of view)
+                window.innerWidth / window.innerHeight, // proporcje widoku, powinny odpowiadać proporjom naszego ekranu przeglądarki
+                0.1, // minimalna renderowana odległość
+                10000 // maxymalna renderowana odległość
+            );
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(0x000000);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            var geometry = new THREE.SphereGeometry(10, 8, 8);
+            var material = new THREE.MeshBasicMaterial({
+                color: 0xff0000, side: THREE.DoubleSide, wireframe: true
+            });
+            var mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            document.getElementById("main").appendChild(renderer.domElement);
+
+            camera.position.x = 0;
+            camera.position.y = 50;
+            camera.position.z = -50;
+
+            camera.lookAt(mesh.position);
+
+            function animateScene() {
+                mesh.rotation.y += 0.01;
+                requestAnimationFrame(animateScene);
+                renderer.render(scene, camera);
+            }
+            animateScene();
+
+            var planets = [
+                { nazwa: "Układ Słoneczny" },
+                { nazwa: "Słońce" },
+                { nazwa: "Merkury" },
+                { nazwa: "Ziemia" },
+                { nazwa: "Mars" },
+                { nazwa: "Jowisz" },
+                { nazwa: "Saturn" },
+                { nazwa: "Uran" },
+                { nazwa: "Neptun" },
+                { nazwa: "Pluton" }
+            ];
+
+            for (var i = 0; i < planets.length; i++){
+                var div = document.createElement("DIV");
+                div.setAttribute("class", "planeta");
+                div.innerHTML = planets[i].nazwa;
+                if (i == 0) {
+                    div.style.marginTop = "20px";
+                }
+                div.onclick = function () {
+                    console.log(this.innerHTML);
+                }
+                var menu = document.getElementById("menu");
+                menu.appendChild(div);
+            }
+        })
+    </script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #main {
+            width: 100vh;
+            height: 100vh;
+        }
+
+        #menu {
+            background-color: transparent;
+            width: 20%;
+            margin-left: 80%;
+            color: white;
+            font-family: Tahoma;
+            position: absolute;
+            height: 100%;
+            top: 0;
+            padding: 5px;
+        }
+
+        .planeta{
+            width: 80%;
+            margin-left: 10%;
+            padding: 5px;
+            font-size: 20px;
+            font-family: Tahoma;
+        }
+
+        .planeta:hover{
+            border-left: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+    <div id="menu"></div>
+</body>
+</html>
